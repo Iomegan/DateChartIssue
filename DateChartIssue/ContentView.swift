@@ -47,6 +47,13 @@ struct ContentView: View {
         HourWeather(date: "2022-10-02-18".date()),
     ]
 
+    static var shortTimeFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .none
+        dateFormatter.timeStyle = .short
+        return dateFormatter
+    }()
+
     var body: some View {
         let allDaytimeDates = myDataSeperatedByHours.map { $0.date } // only the Date objects
 
@@ -56,16 +63,26 @@ struct ContentView: View {
                     x: .value("hour", hourData.date),
                     y: .value("value", hourData.temp)
                 )
+                .foregroundStyle(Color(.red))
             }
-
-            RectangleMark(
-                xStart: .value("hour", myDataSeperatedByHours.first!.date),
-                xEnd: .value("hour", myDataSeperatedByHours.last!.date)
-            )
         }
-
+        .chartYAxis {
+            AxisMarks(position: .leading, values: .automatic()) { _ in
+                AxisValueLabel()
+            }
+        }
+        .chartXAxis {
+            AxisMarks(position: .bottom, values: .automatic(desiredCount: myDataSeperatedByHours.count)) { axisValue in
+                if let date = axisValue.as(Date.self) {
+                    AxisValueLabel(
+                        "\(Self.shortTimeFormatter.calendar.component(.hour, from: date))"
+                    )
+                }
+            }
+        }
+        .frame(width: 500, height: 350)
+        .background(Color.white)
         .chartXScale(domain: allDaytimeDates, type: .date) // MARK: Charts/ChartInternal+Scale.swift:102: Fatal error: The specified scale type is incompatible with the data values and visual property.
-
 //        .chartXScale( type: .date)
         .onAppear {
             print("myDataSeperatedByHours: \(myDataSeperatedByHours)")
