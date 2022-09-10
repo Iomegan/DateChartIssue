@@ -80,9 +80,8 @@ struct ContentView: View {
                 }
             }
         }
-        .frame(width: 500, height: 350)
         .background(Color.white)
-        .chartXScale(domain: allDaytimeDates, type: .date) // MARK: Charts/ChartInternal+Scale.swift:102: Fatal error: The specified scale type is incompatible with the data values and visual property.
+//        .chartXScale(domain: allDaytimeDates, type: .date) // MARK: Charts/ChartInternal+Scale.swift:102: Fatal error: The specified scale type is incompatible with the data values and visual property.
 //        .chartXScale( type: .date)
         .onAppear {
             print("myDataSeperatedByHours: \(myDataSeperatedByHours)")
