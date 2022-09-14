@@ -10,7 +10,7 @@ import SwiftUI
 
 struct HourWeather {
     var date: Date
-    var temp = Double.random(in: 0 ... 60)
+    var temp: Double
 }
 
 extension String {
@@ -23,28 +23,28 @@ extension String {
 
 struct ContentView: View {
     let myDataSeperatedByHours = [
-        HourWeather(date: "2022-10-01-08".date()),
-        HourWeather(date: "2022-10-01-09".date()),
-        HourWeather(date: "2022-10-01-10".date()),
-        HourWeather(date: "2022-10-01-11".date()),
-        HourWeather(date: "2022-10-01-12".date()),
-        HourWeather(date: "2022-10-01-13".date()),
-        HourWeather(date: "2022-10-01-14".date()),
-        HourWeather(date: "2022-10-01-15".date()),
-        HourWeather(date: "2022-10-01-16".date()),
-        HourWeather(date: "2022-10-01-17".date()),
-        HourWeather(date: "2022-10-01-18".date()),
-        HourWeather(date: "2022-10-02-08".date()),
-        HourWeather(date: "2022-10-02-09".date()),
-        HourWeather(date: "2022-10-02-10".date()),
-        HourWeather(date: "2022-10-02-11".date()),
-        HourWeather(date: "2022-10-02-12".date()),
-        HourWeather(date: "2022-10-02-13".date()),
-        HourWeather(date: "2022-10-02-14".date()),
-        HourWeather(date: "2022-10-02-15".date()),
-        HourWeather(date: "2022-10-02-16".date()),
-        HourWeather(date: "2022-10-02-17".date()),
-        HourWeather(date: "2022-10-02-18".date()),
+        HourWeather(date: "2022-10-01-08".date(), temp: 34),
+        HourWeather(date: "2022-10-01-09".date(), temp: 54),
+        HourWeather(date: "2022-10-01-10".date(), temp: 11),
+        HourWeather(date: "2022-10-01-11".date(), temp: 43),
+        HourWeather(date: "2022-10-01-12".date(), temp: 23),
+        HourWeather(date: "2022-10-01-13".date(), temp: 3),
+        HourWeather(date: "2022-10-01-14".date(), temp: 55),
+        HourWeather(date: "2022-10-01-15".date(), temp: 63),
+        HourWeather(date: "2022-10-01-16".date(), temp: 64),
+        HourWeather(date: "2022-10-01-17".date(), temp: 23),
+        HourWeather(date: "2022-10-01-18".date(), temp: 4),
+        HourWeather(date: "2022-10-02-08".date(), temp: 3),
+        HourWeather(date: "2022-10-02-09".date(), temp: 2),
+        HourWeather(date: "2022-10-02-10".date(), temp: 1),
+        HourWeather(date: "2022-10-02-11".date(), temp: 34),
+        HourWeather(date: "2022-10-02-12".date(), temp: 54),
+        HourWeather(date: "2022-10-02-13".date(), temp: 66),
+        HourWeather(date: "2022-10-02-14".date(), temp: 45),
+        HourWeather(date: "2022-10-02-15".date(), temp: 22),
+        HourWeather(date: "2022-10-02-16".date(), temp: 34),
+        HourWeather(date: "2022-10-02-17".date(), temp: 36),
+        HourWeather(date: "2022-10-02-18".date(), temp: 34),
     ]
 
     static var shortTimeFormatter: DateFormatter = {
@@ -72,7 +72,7 @@ struct ContentView: View {
             }
         }
         .chartXAxis {
-            AxisMarks(position: .bottom, values: .automatic(desiredCount: myDataSeperatedByHours.count)) { axisValue in
+            AxisMarks(position: .bottom, values: allDaytimeDates) { axisValue in
                 if let date = axisValue.as(Date.self) {
                     AxisValueLabel(
                         "\(Self.shortTimeFormatter.calendar.component(.hour, from: date))"
@@ -81,8 +81,9 @@ struct ContentView: View {
             }
         }
         .background(Color.white)
-//        .chartXScale(domain: allDaytimeDates, type: .date) // MARK: Charts/ChartInternal+Scale.swift:102: Fatal error: The specified scale type is incompatible with the data values and visual property.
-//        .chartXScale( type: .date)
+        .chartXScale(domain: .automatic(dataType: Date.self) { dates in
+            dates = allDaytimeDates
+        })
         .onAppear {
             print("myDataSeperatedByHours: \(myDataSeperatedByHours)")
         }
